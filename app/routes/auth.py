@@ -6,6 +6,7 @@ from typing import Optional
 from app.db import supabase, users_table
 from app.models import UserCreate, UserLogin, UserProfileResponse
 from app.security import hash_password, verify_password, create_access_token, decode_token
+import os
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
@@ -26,7 +27,7 @@ def signup(user: UserCreate):
 
     # Trigger Supabase Auth sign up to send confirmation mail
     try:
-        redirect_url = "http://localhost:8080/"
+        redirect_url = os.getenv("FRONTEND_URL", "https://www.ramaai.in/")
         supabase.auth.sign_up({
             "email": user.email,
             "password": user.password,
