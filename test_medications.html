@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Medications Insert</title>
+</head>
+<body>
+    <h1>Test Medications API</h1>
+    
+    <div>
+        <h2>GET Reminders (Read)</h2>
+        <button onclick="testGet()">Test GET</button>
+        <pre id="getResult"></pre>
+    </div>
+    
+    <div>
+        <h2>POST Test Insert (Write)</h2>
+        <button onclick="testPost()">Test POST</button>
+        <pre id="postResult"></pre>
+    </div>
+    
+    <div>
+        <h2>Create Real Reminder (with Auth)</h2>
+        <input type="text" id="patientName" placeholder="Patient Name" value="John Doe"><br>
+        <input type="text" id="medName" placeholder="Medication" value="Aspirin"><br>
+        <input type="text" id="dosage" placeholder="Dosage" value="100mg"><br>
+        <input type="text" id="sendTime" placeholder="Time (HH:MM)" value="14:00"><br>
+        <input type="text" id="phone" placeholder="Phone" value="+1234567890"><br>
+        <button onclick="createReminder()">Create Reminder</button>
+        <pre id="createResult"></pre>
+    </div>
+
+    <script>
+        async function testGet() {
+            const response = await fetch('http://localhost:8000/medications/test');
+            const data = await response.json();
+            document.getElementById('getResult').textContent = JSON.stringify(data, null, 2);
+        }
+        
+        async function testPost() {
+            const response = await fetch('http://localhost:8000/medications/test-insert', {
+                method: 'POST'
+            });
+            const data = await response.json();
+            document.getElementById('postResult').textContent = JSON.stringify(data, null, 2);
+        }
+        
+        async function createReminder() {
+            const token = prompt('Enter your auth token (from login):');
+            if (!token) return;
+            
+            const data = {
+                patient_name: document.getElementById('patientName').value,
+                medication_name: document.getElementById('medName').value,
+                dosage: document.getElementById('dosage').value,
+                send_time: document.getElementById('sendTime').value,
+                phone_number: document.getElementById('phone').value
+            };
+            
+            const response = await fetch('http://localhost:8000/medications/schedule-reminder', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(data)
+            });
+            
+            const result = await response.json();
+            document.getElementById('createResult').textContent = JSON.stringify(result, null, 2);
+        }
+    </script>
+</body>
+</html>
+
+
+

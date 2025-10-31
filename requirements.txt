@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+supabase
+python-jose[cryptography]
+passlib[bcrypt]
+python-dotenv
+openai
+requests
+APScheduler
+twilio
+PyPDF2
