@@ -5,6 +5,7 @@ from app.routes import generalknowledge, educationy
 from app.db import supabase  # import the Supabase client
 from app.routes import quiz
 from app.routes import song  # ✅ import
+import os
 
 
 app = FastAPI(title="RAMA AI Backend")
@@ -17,10 +18,15 @@ async def log_requests(request: Request, call_next):
     print(f"[RESPONSE] Status: {response.status_code}\n")
     return response
 
+# CORS Configuration
+# Allow all origins but without credentials for wildcard compatibility
+# Get allowed origins from environment or use wildcard
+allowed_origins = os.getenv("ALLOWED_ORIGINS", "*").split(",")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # adjust for frontend URLs
-    allow_credentials=True,
+    allow_origins=allowed_origins,  # Can be ["*"] or specific URLs
+    allow_credentials=True if "*" not in allowed_origins else False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
