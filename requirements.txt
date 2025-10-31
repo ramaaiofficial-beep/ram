@@ -9,3 +9,7 @@ requests
 APScheduler
 twilio
 PyPDF2
+fastapi
+uvicorn
+pydantic[email]
+email-validator
